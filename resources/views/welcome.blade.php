@@ -31,7 +31,7 @@
                 </div>
                 <h3 class="text-xl font-bold text-white mb-2">Rakstīšanas ātrums</h3>
                 <p class="text-slate-400 mb-4">Īss apraksts: Pārbaudi savu rakstīšanas ātrumu spēlē</p>
-                <button class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded transition-all">Spēlēt tagad</button>
+                <a href="/game" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded transition-all block text-center">Spēlēt tagad</a>
             </div>
         </div>
     </div>
