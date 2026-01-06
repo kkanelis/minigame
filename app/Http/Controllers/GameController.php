@@ -17,8 +17,6 @@ class GameController extends Controller
 
     public function leaderboard(): View
     {
-        $results = GameResult::orderBy('created_at', 'desc')->limit(100)->get();
-
         $leaderboard = [
             'easy' => GameResult::where('difficulty', 'easy')->orderByDesc('words_per_minute')->limit(10)->get(),
             'medium' => GameResult::where('difficulty', 'medium')->orderByDesc('words_per_minute')->limit(10)->get(),
@@ -68,20 +66,14 @@ class GameController extends Controller
     public function saveMemoryResult(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'nickname' => 'nullable|string|max:50',
-            'time' => 'required|integer|min:0',
-            'moves' => 'required|integer|min:0',
+            'nickname' => 'required|string|max:50',
+            'difficulty' => 'required|string',
+            'time_taken' => 'required|integer|min:0',
+            'words_per_minute' => 'required|integer|min:0',
+            'accuracy' => 'required|integer|min:0|max:100',
         ]);
 
-        $nickname = $validated['nickname'] ?? 'guest';
-
-        $result = GameResult::create([
-            'nickname' => $nickname,
-            'difficulty' => 'memory',
-            'time_taken' => (int) $validated['time'],
-            'words_per_minute' => (int) $validated['moves'],
-            'accuracy' => 100,
-        ]);
+        $result = GameResult::create($validated);
 
         return response()->json([
             'success' => true,
@@ -93,8 +85,14 @@ class GameController extends Controller
     public function getLeaderboardData(Request $request): JsonResponse
     {
         $difficulty = $request->query('difficulty');
+        $type = $request->query('type');
 
-        if ($difficulty) {
+        if ($type && $difficulty) {
+            $leaderboard = GameResult::where('difficulty', $type . '_' . $difficulty)
+                ->orderByDesc('words_per_minute')
+                ->limit(10)
+                ->get();
+        } elseif ($difficulty) {
             $leaderboard = GameResult::where('difficulty', $difficulty)
                 ->orderByDesc('words_per_minute')
                 ->limit(10)
@@ -104,5 +102,27 @@ class GameController extends Controller
         }
 
         return response()->json($leaderboard);
+    }
+
+    public function getTypingLeaderboard(Request $request, string $difficulty): JsonResponse
+    {
+        $results = GameResult::where('difficulty', $difficulty)
+            ->whereNotIn('difficulty', ['memory_easy', 'memory_medium', 'memory_hard'])
+            ->orderByDesc('words_per_minute')
+            ->limit(10)
+            ->get();
+
+        return response()->json($results);
+    }
+
+    public function getMemoryLeaderboard(Request $request, string $difficulty): JsonResponse
+    {
+        $memoryDifficulty = 'memory_' . $difficulty;
+        $results = GameResult::where('difficulty', $memoryDifficulty)
+            ->orderByDesc('words_per_minute')
+            ->limit(10)
+            ->get();
+
+        return response()->json($results);
     }
 }
