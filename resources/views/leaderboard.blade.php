@@ -18,6 +18,17 @@
             <h1 style="font-size: 48px; margin: 0 0 10px 0; font-weight: bold;">🏆 Leaderboard</h1>
             <p style="color: #999; margin: 0 0 40px 0; font-size: 14px;">Top players worldwide</p>
 
+            <!-- Current Player Info -->
+            <div
+                style="background: #1a1a1a; border: 1px solid #0066cc; border-radius: 12px; padding: 20px; margin-bottom: 40px; display: flex; align-items: center; gap: 15px;">
+                <div style="font-size: 28px;">👤</div>
+                <div>
+                    <p style="margin: 0; color: #999; font-size: 12px; text-transform: uppercase;">Current Player</p>
+                    <p style="margin: 0; color: white; font-size: 20px; font-weight: bold;" id="currentPlayerName">
+                        Loading...</p>
+                </div>
+            </div>
+
             <!-- Typing Game -->
             <div style="margin-bottom: 60px;">
                 <h2 style="font-size: 32px; margin: 0 0 20px 0; font-weight: bold;">⌨️ Typing Game</h2>
@@ -31,7 +42,7 @@
                         style="padding: 10px 20px; border: 1px solid #333; background: transparent; color: white; border-radius: 4px; cursor: pointer; font-weight: bold;">Hard</button>
                     <button class="typing-tab" data-difficulty="hardcore"
                         style="padding: 10px 20px; border: 1px solid #333; background: transparent; color: white; border-radius: 4px; cursor: pointer; font-weight: bold;">Hardcore</button>
-                    
+
                 </div>
 
                 <div style="background: #1a1a1a; border: 1px solid #333; border-radius: 12px; overflow: hidden;">
@@ -161,12 +172,12 @@
                             const row = document.createElement('tr');
                             row.style.borderBottom = '1px solid #333';
                             row.innerHTML = `
-                            <td style="padding: 15px; font-weight: bold; color: #0066cc;">#${idx + 1}</td>
-                            <td style="padding: 15px;">${result.nickname}</td>
-                            <td style="padding: 15px; text-align: center;">${result.words_per_minute}</td>
-                            <td style="padding: 15px; text-align: center;">${result.accuracy}%</td>
-                            <td style="padding: 15px; text-align: center;">${result.time_taken}s</td>
-                        `;
+                                <td style="padding: 15px; font-weight: bold; color: #0066cc;">#${idx + 1}</td>
+                                <td style="padding: 15px;">${result.nickname}</td>
+                                <td style="padding: 15px; text-align: center;">${result.words_per_minute}</td>
+                                <td style="padding: 15px; text-align: center;">${result.accuracy}%</td>
+                                <td style="padding: 15px; text-align: center;">${result.time_taken}s</td>
+                            `;
                             tbody.appendChild(row);
                         });
                     }
@@ -194,11 +205,11 @@
                             const row = document.createElement('tr');
                             row.style.borderBottom = '1px solid #333';
                             row.innerHTML = `
-                            <td style="padding: 15px; font-weight: bold; color: #0066cc;">#${idx + 1}</td>
-                            <td style="padding: 15px;">${result.nickname}</td>
-                            <td style="padding: 15px; text-align: center;">${result.time_taken}s</td>
-                            <td style="padding: 15px; text-align: center;">${result.words_per_minute}</td>
-                        `;
+                                <td style="padding: 15px; font-weight: bold; color: #0066cc;">#${idx + 1}</td>
+                                <td style="padding: 15px;">${result.nickname}</td>
+                                <td style="padding: 15px; text-align: center;">${result.time_taken}s</td>
+                                <td style="padding: 15px; text-align: center;">${result.words_per_minute}</td>
+                            `;
                             tbody.appendChild(row);
                         });
                     }
@@ -212,5 +223,15 @@
         // Load initial data
         loadTypingLeaderboard('easy');
         loadMemoryLeaderboard('easy');
+
+        // Display current player name
+        const playerName = sessionStorage.getItem('playerName');
+        const currentPlayerNameElement = document.getElementById('currentPlayerName');
+        if (playerName) {
+            currentPlayerNameElement.textContent = playerName;
+        } else {
+            currentPlayerNameElement.textContent = 'Unknown Player';
+            currentPlayerNameElement.style.color = '#666';
+        }
     </script>
 @endsection
