@@ -22,6 +22,7 @@ class GameController extends Controller
             'medium' => GameResult::where('difficulty', 'medium')->orderByDesc('words_per_minute')->limit(10)->get(),
             'hard' => GameResult::where('difficulty', 'hard')->orderByDesc('words_per_minute')->limit(10)->get(),
             'hardcore' => GameResult::where('difficulty', 'hardcore')->orderByDesc('words_per_minute')->limit(10)->get(),
+            'extreme' => GameResult::where('difficulty', 'extreme')->orderByDesc('words_per_minute')->limit(10)->get(),
         ];
 
         return view('leaderboard', ['leaderboard' => $leaderboard]);
@@ -31,7 +32,7 @@ class GameController extends Controller
     {
         $difficulty = $request->query('difficulty', 'easy');
 
-        $validDifficulties = ['easy', 'medium', 'hard', 'hardcore'];
+        $validDifficulties = ['easy', 'medium', 'hard', 'hardcore', 'extreme'];
         if (!in_array($difficulty, $validDifficulties)) {
             $difficulty = 'easy';
         }
@@ -48,7 +49,7 @@ class GameController extends Controller
     {
         $validated = $request->validate([
             'nickname' => 'required|string|max:50',
-            'difficulty' => 'required|string|in:easy,medium,hard,hardcore',
+            'difficulty' => 'required|string|in:easy,medium,hard,hardcore,extreme',
             'time_taken' => 'required|integer|min:1',
             'words_per_minute' => 'required|integer|min:0',
             'accuracy' => 'required|integer|min:0|max:100',
